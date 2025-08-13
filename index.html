@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .chat-message { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .settings-modal { backdrop-filter: blur(8px); }
+        .sidebar-item:hover { background-color: #f3f4f6; }
+        .chat-item:hover { background-color: #f9fafb; }
+        .active-chat { background-color: #f3f4f6; }
+    </style>
+</head>
+<body class="bg-white h-screen flex">
+    <!-- Left Sidebar -->
+    <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <!-- Logo and Navigation -->
+        <div class="p-4 border-b border-gray-100">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142-.0852 4.783-2.7582a.7712.7712 0 0 0 .7806 0l5.8428 3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>
+                    </svg>
+                </div>
+                <span class="font-semibold text-gray-800">ChatGPT</span>
+            </div>
+            
+            <div class="space-y-2">
+                <div class="sidebar-item flex items-center space-x-3 px-3 py-2 rounded-lg cursor-pointer">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span class="text-sm text-gray-700">Obrolan baru</span>
+                </div>
+                
+                <div class="sidebar-item flex items-center space-x-3 px-3 py-2 rounded-lg cursor-pointer">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <span class="text-sm text-gray-700">Cari obrolan</span>
+                </div>
+                
+                <div class="sidebar-item flex items-center space-x-3 px-3 py-2 rounded-lg cursor-pointer">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    <span class="text-sm text-gray-700">Perpustakaan</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat History -->
+        <div class="flex-1 overflow-y-auto p-4">
+            <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">Obrolan</h3>
+            <div class="space-y-1" id="chatHistoryList">
+                <div class="chat-item active-chat flex items-center px-3 py-2 rounded-lg cursor-pointer">
+                    <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                    <span class="text-sm text-gray-800 truncate">Buat tweet tentang prompt</span>
+                </div>
+                <div class="chat-item flex items-center px-3 py-2 rounded-lg cursor-pointer">
+                    <div class="w-2 h-2 mr-3"></div>
+                    <span class="text-sm text-gray-700 truncate">Translate to English</span>
+                </div>
+                <div class="chat-item flex items-center px-3 py-2 rounded-lg cursor-pointer">
+                    <div class="w-2 h-2 mr-3"></div>
+                    <span class="text-sm text-gray-700 truncate">Translate ke Inggris</span>
+                </div>
+                <div class="chat-item flex items-center px-3 py-2 rounded-lg cursor-pointer">
+                    <div class="w-2 h-2 mr-3"></div>
+                    <span class="text-sm text-gray-700 truncate">Bikin website AI</span>
+                </div>
+                <div class="chat-item flex items-center px-3 py-2 rounded-lg cursor-pointer">
+                    <div class="w-2 h-2 mr-3"></div>
+                    <span class="text-sm text-gray-700 truncate">History chat di sini</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Account -->
+        <div class="p-4 border-t border-gray-100">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                    <span class="text-white text-xs font-medium">LE</span>
+                </div>
+                <div class="flex-1">
+                    <div class="text-sm font-medium text-gray-800">Leona Fariz Pratama</div>
+                    <div class="text-xs text-gray-500">Free</div>
+                </div>
+                <button id="settingsBtn" class="p-1 text-gray-400 hover:text-gray-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="text-xs text-gray-500 mt-1">Akun di sini</div>
+        </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="flex-1 flex flex-col bg-white">
+        <!-- Top Bar -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-100">
+            <div class="flex-1"></div>
+            <div class="flex items-center space-x-3">
+                <button class="flex items-center space-x-2 px-4 py-2 bg-white border border-purple-200 text-purple-600 rounded-full hover:bg-purple-50 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span class="text-sm font-medium">Dapatkan Plus</span>
+                </button>
+                <button id="refreshBtn" class="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="flex-1 flex flex-col">
+            <div id="chatContainer" class="flex-1 overflow-y-auto">
+                <!-- Welcome Screen -->
+                <div class="flex items-center justify-center h-full">
+                    <div class="text-center max-w-2xl px-8">
+                        <h1 class="text-4xl font-bold text-gray-800 mb-8">Apa yang bisa saya bantu?</h1>
+                        
+                        <!-- Input Area -->
+                        <div class="relative">
+                            <div class="flex items-center bg-white border border-gray-200 rounded-2xl shadow-sm px-4 py-3 focus-within:border-gray-300 focus-within:shadow-md transition-all">
+                                <button class="p-1 text-gray-400 hover:text-gray-600 mr-3">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                </button>
+                                
+                                <input 
+                                    type="text" 
+                                    id="messageInput" 
+                                    placeholder="Tanyakan apa saja"
+                                    class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-500"
+                                >
+                                
+                                <div class="flex items-center space-x-2 ml-3">
+                                    <button class="p-1 text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="p-1 text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 settings-modal hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-800">Pengaturan</h3>
+                <button id="closeSettings" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Provider AI</label>
+                    <select id="providerSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <option value="openai">OpenAI</option>
+                        <option value="deepseek">DeepSeek</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2" id="apiKeyLabel">API Key</label>
+                    <input 
+                        type="password" 
+                        id="apiKeyInput" 
+                        placeholder="sk-..."
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    >
+                    <p class="text-xs text-gray-500 mt-1">API key Anda akan disimpan secara lokal dan aman</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Model</label>
+                    <select id="modelSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <option value="gpt-4o-mini">GPT-4o Mini</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button id="cancelSettings" class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
+                    Batal
+                </button>
+                <button id="saveSettings" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
+                    Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ChatGPT {
+            constructor() {
+                this.provider = localStorage.getItem('ai_provider') || 'openai';
+                this.apiKey = localStorage.getItem('ai_api_key') || '';
+                this.model = localStorage.getItem('ai_model') || 'gpt-4o-mini';
+                this.chatHistory = JSON.parse(localStorage.getItem('chat_history') || '[]');
+                this.messages = [];
+                this.currentChatId = null;
+                
+                this.initializeElements();
+                this.bindEvents();
+                this.loadChatHistory();
+                this.loadSettings();
+                this.handleURLPrompt();
+            }
+
+            initializeElements() {
+                this.chatContainer = document.getElementById('chatContainer');
+                this.messageInput = document.getElementById('messageInput');
+                this.settingsModal = document.getElementById('settingsModal');
+                this.providerSelect = document.getElementById('providerSelect');
+                this.apiKeyInput = document.getElementById('apiKeyInput');
+                this.apiKeyLabel = document.getElementById('apiKeyLabel');
+                this.modelSelect = document.getElementById('modelSelect');
+                this.chatHistoryList = document.getElementById('chatHistoryList');
+            }
+
+            bindEvents() {
+                // Send message events
+                this.messageInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                // Settings modal events
+                document.getElementById('settingsBtn').addEventListener('click', () => this.openSettings());
+                document.getElementById('closeSettings').addEventListener('click', () => this.closeSettings());
+                document.getElementById('cancelSettings').addEventListener('click', () => this.closeSettings());
+                document.getElementById('saveSettings').addEventListener('click', () => this.saveSettings());
+                
+                // Provider change event
+                this.providerSelect.addEventListener('change', () => this.updateProviderSettings());
+
+                // Refresh button
+                document.getElementById('refreshBtn').addEventListener('click', () => this.newChat());
+
+                // New chat button
+                document.querySelector('.sidebar-item').addEventListener('click', () => this.newChat());
+
+                // Close modal on backdrop click
+                this.settingsModal.addEventListener('click', (e) => {
+                    if (e.target === this.settingsModal) this.closeSettings();
+                });
+            }
+
+            loadSettings() {
+                this.providerSelect.value = this.provider;
+                this.apiKeyInput.value = this.apiKey;
+                this.modelSelect.value = this.model;
+                this.updateProviderSettings();
+            }
+
+            openSettings() {
+                this.settingsModal.classList.remove('hidden');
+                this.settingsModal.classList.add('flex');
+            }
+
+            closeSettings() {
+                this.settingsModal.classList.add('hidden');
+                this.settingsModal.classList.remove('flex');
+            }
+
+            saveSettings() {
+                this.provider = this.providerSelect.value;
+                this.apiKey = this.apiKeyInput.value.trim();
+                this.model = this.modelSelect.value;
+                
+                localStorage.setItem('ai_provider', this.provider);
+                localStorage.setItem('ai_api_key', this.apiKey);
+                localStorage.setItem('ai_model', this.model);
+                
+                this.closeSettings();
+                this.showNotification('Pengaturan berhasil disimpan!');
+            }
+
+            updateProviderSettings() {
+                const provider = this.providerSelect.value;
+                
+                // Update label dan placeholder
+                if (provider === 'deepseek') {
+                    this.apiKeyLabel.textContent = 'DeepSeek API Key';
+                    this.apiKeyInput.placeholder = 'sk-...';
+                    
+                    // Update model options untuk DeepSeek
+                    this.modelSelect.innerHTML = `
+                        <option value="deepseek-chat">DeepSeek Chat</option>
+                        <option value="deepseek-coder">DeepSeek Coder</option>
+                    `;
+                } else {
+                    this.apiKeyLabel.textContent = 'OpenAI API Key';
+                    this.apiKeyInput.placeholder = 'sk-...';
+                    
+                    // Update model options untuk OpenAI
+                    this.modelSelect.innerHTML = `
+                        <option value="gpt-4o-mini">GPT-4o Mini</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                    `;
+                }
+                
+                // Set default model berdasarkan provider
+                if (provider === 'deepseek') {
+                    this.modelSelect.value = 'deepseek-chat';
+                } else {
+                    this.modelSelect.value = 'gpt-4o-mini';
+                }
+            }
+
+            loadChatHistory() {
+                // Load existing chats from localStorage
+                const savedChats = JSON.parse(localStorage.getItem('all_chats') || '{}');
+                this.updateChatHistoryUI(savedChats);
+            }
+
+            updateChatHistoryUI(chats) {
+                // Keep the existing static items and add dynamic ones
+                const staticItems = this.chatHistoryList.innerHTML;
+                // Add dynamic chat items here if needed
+            }
+
+            newChat() {
+                this.messages = [];
+                this.currentChatId = null;
+                this.showWelcomeScreen();
+                
+                // Remove active state from all chat items
+                document.querySelectorAll('.chat-item').forEach(item => {
+                    item.classList.remove('active-chat');
+                    const dot = item.querySelector('.w-2.h-2');
+                    if (dot) dot.classList.remove('bg-blue-500');
+                });
+            }
+
+            showWelcomeScreen() {
+                this.chatContainer.innerHTML = `
+                    <div class="flex items-center justify-center h-full">
+                        <div class="text-center max-w-2xl px-8">
+                            <h1 class="text-4xl font-bold text-gray-800 mb-8">Apa yang bisa saya bantu?</h1>
+                            
+                            <div class="relative">
+                                <div class="flex items-center bg-white border border-gray-200 rounded-2xl shadow-sm px-4 py-3 focus-within:border-gray-300 focus-within:shadow-md transition-all">
+                                    <button class="p-1 text-gray-400 hover:text-gray-600 mr-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                        </svg>
+                                    </button>
+                                    
+                                    <input 
+                                        type="text" 
+                                        id="messageInput" 
+                                        placeholder="Tanyakan apa saja"
+                                        class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-500"
+                                    >
+                                    
+                                    <div class="flex items-center space-x-2 ml-3">
+                                        <button class="p-1 text-gray-400 hover:text-gray-600">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="p-1 text-gray-400 hover:text-gray-600">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Re-bind the input event
+                this.messageInput = document.getElementById('messageInput');
+                this.messageInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+            }
+
+            async sendMessage() {
+                const message = this.messageInput.value.trim();
+                if (!message) return;
+
+                if (!this.apiKey) {
+                    const providerName = this.provider === 'deepseek' ? 'DeepSeek' : 'OpenAI';
+                    this.showNotification(`Silakan masukkan API Key ${providerName} di pengaturan terlebih dahulu!`, 'error');
+                    this.openSettings();
+                    return;
+                }
+
+                // Switch to chat view if on welcome screen
+                if (this.messages.length === 0) {
+                    this.switchToChatView();
+                }
+
+                // Display user message
+                this.displayMessage(message, 'user');
+                this.messages.push({ role: 'user', content: message });
+                
+                // Clear input
+                this.messageInput.value = '';
+                
+                // Show typing indicator
+                const typingId = this.showTypingIndicator();
+                
+                try {
+                    const response = await this.callOpenAI(message);
+                    this.removeTypingIndicator(typingId);
+                    
+                    // Display AI response
+                    this.displayMessage(response, 'assistant');
+                    this.messages.push({ role: 'assistant', content: response });
+                    
+                    // Save chat
+                    this.saveCurrentChat();
+                    
+                } catch (error) {
+                    this.removeTypingIndicator(typingId);
+                    this.displayMessage('Maaf, terjadi kesalahan: ' + error.message, 'assistant', true);
+                }
+            }
+
+            switchToChatView() {
+                this.chatContainer.innerHTML = `
+                    <div class="flex-1 p-6 space-y-6" id="messagesContainer">
+                    </div>
+                    <div class="border-t border-gray-100 p-4">
+                        <div class="max-w-4xl mx-auto">
+                            <div class="flex items-center bg-white border border-gray-200 rounded-2xl shadow-sm px-4 py-3 focus-within:border-gray-300 focus-within:shadow-md transition-all">
+                                <button class="p-1 text-gray-400 hover:text-gray-600 mr-3">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                </button>
+                                
+                                <input 
+                                    type="text" 
+                                    id="messageInput" 
+                                    placeholder="Tanyakan apa saja"
+                                    class="flex-1 bg-transparent border-none outline-none text-gray-800 placeholder-gray-500"
+                                >
+                                
+                                <div class="flex items-center space-x-2 ml-3">
+                                    <button class="p-1 text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="p-1 text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Re-bind the input event
+                this.messageInput = document.getElementById('messageInput');
+                this.messageInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+            }
+
+            async callOpenAI(message) {
+                let apiUrl, headers;
+                
+                if (this.provider === 'deepseek') {
+                    apiUrl = 'https://api.deepseek.com/v1/chat/completions';
+                    headers = {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.apiKey}`
+                    };
+                } else {
+                    apiUrl = 'https://api.openai.com/v1/chat/completions';
+                    headers = {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.apiKey}`
+                    };
+                }
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        model: this.model,
+                        messages: [
+                            { role: 'system', content: 'Anda adalah asisten AI yang membantu dan ramah. Jawab dalam bahasa Indonesia kecuali diminta sebaliknya.' },
+                            ...this.messages.slice(-10),
+                            { role: 'user', content: message }
+                        ],
+                        max_tokens: 1000,
+                        temperature: 0.7
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    const providerName = this.provider === 'deepseek' ? 'DeepSeek' : 'OpenAI';
+                    throw new Error(error.error?.message || `Gagal menghubungi ${providerName} API`);
+                }
+
+                const data = await response.json();
+                return data.choices[0].message.content;
+            }
+
+            displayMessage(content, role, isError = false) {
+                const messagesContainer = document.getElementById('messagesContainer');
+                if (!messagesContainer) return;
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `chat-message flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+                
+                const isUser = role === 'user';
+                const bgColor = isError ? 'bg-red-50 border-red-200' : (isUser ? 'bg-gray-100' : 'bg-transparent');
+                const textColor = isError ? 'text-red-800' : 'text-gray-800';
+                const borderStyle = isError ? 'border' : (isUser ? 'border' : '');
+                
+                messageDiv.innerHTML = `
+                    <div class="max-w-3xl w-full">
+                        <div class="px-4 py-3 ${isUser ? 'rounded-2xl' : ''} ${bgColor} ${textColor} ${borderStyle} ${isUser ? 'shadow-sm' : ''}">
+                            <p class="whitespace-pre-wrap" ${!isUser ? 'id="ai-response-' + Date.now() + '"' : ''}>${isUser ? content : ''}</p>
+                        </div>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+                
+                // Jika ini adalah respons AI, gunakan animasi mengetik
+                if (!isUser && !isError) {
+                    const responseElement = messageDiv.querySelector('p');
+                    this.typeWriter(responseElement, content);
+                }
+                
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            showTypingIndicator() {
+                const messagesContainer = document.getElementById('messagesContainer');
+                if (!messagesContainer) return;
+
+                const typingId = 'typing-' + Date.now();
+                const typingDiv = document.createElement('div');
+                typingDiv.id = typingId;
+                typingDiv.className = 'chat-message flex justify-start';
+                typingDiv.innerHTML = `
+                    <div class="max-w-3xl w-full">
+                        <div class="px-4 py-3">
+                            <div class="typing-indicator flex space-x-1">
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
+                                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(typingDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                return typingId;
+            }
+
+            removeTypingIndicator(typingId) {
+                const typingElement = document.getElementById(typingId);
+                if (typingElement) {
+                    typingElement.remove();
+                }
+            }
+
+            typeWriter(element, text, speed = 30) {
+                let i = 0;
+                element.innerHTML = '';
+                
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                        
+                        // Auto scroll saat mengetik
+                        const messagesContainer = document.getElementById('messagesContainer');
+                        if (messagesContainer) {
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                    }
+                }
+                
+                type();
+            }
+
+            saveCurrentChat() {
+                if (this.messages.length > 0) {
+                    const chatTitle = this.messages[0].content.substring(0, 30) + '...';
+                    const chatId = this.currentChatId || Date.now().toString();
+                    
+                    const allChats = JSON.parse(localStorage.getItem('all_chats') || '{}');
+                    allChats[chatId] = {
+                        title: chatTitle,
+                        messages: this.messages,
+                        timestamp: Date.now()
+                    };
+                    
+                    localStorage.setItem('all_chats', JSON.stringify(allChats));
+                    this.currentChatId = chatId;
+                }
+            }
+
+            handleURLPrompt() {
+                // Ambil parameter "prompt" dari URL
+                const params = new URLSearchParams(window.location.search);
+                const prompt = params.get("prompt");
+
+                // Kalau ada prompt di URL, masukkan ke input dan kirim otomatis
+                if (prompt) {
+                    const decodedPrompt = decodeURIComponent(prompt.replace(/\+/g, ' '));
+                    
+                    // Tunggu sebentar untuk memastikan elemen sudah siap
+                    setTimeout(() => {
+                        if (this.messageInput) {
+                            this.messageInput.value = decodedPrompt;
+                            
+                            // Auto-send prompt jika API key sudah ada
+                            if (this.apiKey) {
+                                this.sendMessage();
+                            } else {
+                                const providerName = this.provider === 'deepseek' ? 'DeepSeek' : 'OpenAI';
+                                this.showNotification(`Prompt dari URL berhasil dimuat! Silakan masukkan API Key ${providerName} untuk mengirim.`, 'success');
+                            }
+                        }
+                    }, 500);
+                    
+                    // Bersihkan URL setelah mengambil prompt
+                    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                    window.history.replaceState({}, document.title, newUrl);
+                }
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 px-4 py-2 rounded-lg text-white z-50 ${type === 'error' ? 'bg-red-500' : 'bg-green-500'}`;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialize the chat application
+        document.addEventListener('DOMContentLoaded', () => {
+            new ChatGPT();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96e81fa0024fef6a',t:'MTc1NTA4NzE3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
