@@ -16,10 +16,6 @@ Dengan fitur ini, kamu bisa membagikan link yang saat diklik langsung memuat pro
 **Contoh:**
 https://leonafariz.github.io/CloneGPT/?prompt=Anda+adalah+asisten+AI+ahli+di+bidang+teknologi%2C+bisnis%2C+dan+penulisan+kreatif...
 
-yaml
-Salin
-Edit
-
 Ketika link ini dibuka:
 1. Prompt akan otomatis muncul di kolom input.
 2. Kamu tinggal klik **Send** untuk mendapatkan respons AI.
@@ -49,18 +45,11 @@ Ketika link ini dibuka:
 Format:
 https://leonafariz.github.io/CloneGPT/?prompt=ISI_PROMPT
 
-markdown
-Salin
-Edit
 - Ganti `ISI_PROMPT` dengan teks prompt, lalu **URL-encode** (spasi jadi `+`, karakter khusus di-encode).
 - Gunakan [URL Encoder](https://www.urlencoder.org/) untuk mempermudah.
 
 **Contoh:**
 https://leonafariz.github.io/CloneGPT/?prompt=Tuliskan+cerpen+tentang+petualangan+di+hutan
-
-yaml
-Salin
-Edit
 
 ---
 
