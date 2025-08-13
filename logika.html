@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>CloneGPT - Direct Prompt Link</title>
+</head>
+<body>
+  <textarea id="promptBox" placeholder="Masukkan prompt di sini..."></textarea>
+  <script>
+    // Ambil parameter "prompt" dari URL
+    const params = new URLSearchParams(window.location.search);
+    const prompt = params.get("prompt");
+
+    // Kalau ada prompt di URL, masukkan ke textarea
+    if (prompt) {
+      const promptBox = document.getElementById("promptBox");
+      promptBox.value = decodeURIComponent(prompt);
+    }
+  </script>
+</body>
+</html>
